@@ -11,6 +11,7 @@ module Cisco
 		  @user    = options[:user]
 		  @password = options[:password]
 		  @prompt  = options[:prompt]
+      @enable_level  = options[:enable_level]
 		  @sshargs = options[:directargs] || [@host, @user, {:password => @password, :auth_methods => ["password"]}]
 		  @pwprompt = options[:pwprompt] || "Password:"
 		  @cmdbuf, @extra_init = [], []
@@ -27,7 +28,7 @@ module Cisco
 			@ssh.open_channel do |chan|
 				chan.send_channel_request("shell") do |ch, success|
 					if !success
-						abort "Could not open shell channel"
+						raise CiscoError.new("Could not open shell channel")
 					else
 						ch.on_data do |chn, data|
 							@outblock.call(data) if @outblock
@@ -40,7 +41,7 @@ module Cisco
 				end
 			end
 			@ssh.loop
-			
+			rescue Net::SSH::Disconnect
 			@results
 		end
 		
@@ -50,7 +51,7 @@ module Cisco
 		def close(chn)
       10.times do
         chn.send_data("exit\n") unless (!chn.active? || chn.closing?)
-      end
+			end
     end
 		
 		private
