@@ -10,6 +10,7 @@ module Cisco
       @host    = options[:host]
       @password = options[:password]
       @prompt  = options[:prompt]
+      @enable_level  = options[:enable_level]
       @targs   = options[:directargs] || ["Host" => @host]
 		  @pwprompt = options[:pwprompt] || "Password:"
       @cmdbuf, @extra_init = [], []
