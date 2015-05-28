@@ -7,7 +7,7 @@ module Cisco
     def enable(password, pwprompt = nil)
       @pwprompt = pwprompt || @pwprompt
       old = @prompt
-      cmd("enable", @pwprompt)
+      cmd("enable #{@enable_level.to_s}", @pwprompt)
       cmd(password, old)
     end
 
