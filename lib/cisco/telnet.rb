@@ -1,5 +1,3 @@
-require 'net/telnet'
-
 module Cisco
 
   class Telnet
